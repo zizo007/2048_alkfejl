@@ -8,12 +8,12 @@ import java.util.Random;
 
 public class Tile extends Label {
 
-        private final int value;
+        private int value;
         private int x;
         private int y;
 
 
-        private Tile(Integer value) {
+        Tile(Integer value) {
                 final int squareSize = 100;
                 setMinSize(squareSize, squareSize);
                 setMaxSize(squareSize, squareSize);
@@ -21,7 +21,6 @@ public class Tile extends Label {
                 setAlignment(Pos.CENTER);
 
                 this.value = value;
-                System.out.println(value);
                 setText(value.toString());
                 getStyleClass().add("tile-text");
 
@@ -42,6 +41,11 @@ public class Tile extends Label {
 
         public int getY() {
                 return y;
+        }
+
+        public void merge(Tile another) {
+                this.value += another.value;
+                setText(Integer.toString(value));
         }
 
 

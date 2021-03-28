@@ -21,23 +21,28 @@ public class Game2048 extends Application {
 
         Board board = new Board();
         board.createGrid();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
-        board.addRandomTile();
+        board.fillTileArray();
+        for(int i = 0; i<16; i ++){
+            board.addRandomTile();
+        }
+
+        for(int i = 0; i<4; i ++){
+            System.out.print("[");
+            for(int j = 0; j<4; j ++){
+                System.out.print(board.getBoardPositions()[j][i].getValue());
+            }
+            System.out.println("]");
+        }
+
+        board.getBoardPositions()[0][0].merge(board.getBoardPositions()[0][1]);
+
+        for(int i = 0; i<4; i ++){
+            System.out.print("[");
+            for(int j = 0; j<4; j ++){
+                System.out.print(board.getBoardPositions()[j][i].getValue());
+            }
+            System.out.println("]");
+        }
 
         var label = new StackPane();
         label.getChildren().add(board.getGridGroup());
