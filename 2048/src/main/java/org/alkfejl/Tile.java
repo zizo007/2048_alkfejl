@@ -9,12 +9,10 @@ import java.util.Random;
 public class Tile extends Label {
 
         private int value;
-        private int x;
-        private int y;
 
 
         Tile(Integer value) {
-                final int squareSize = 100;
+                final int squareSize = 100-10;
                 setMinSize(squareSize, squareSize);
                 setMaxSize(squareSize, squareSize);
                 setPrefSize(squareSize, squareSize);
@@ -22,7 +20,7 @@ public class Tile extends Label {
 
                 this.value = value;
                 setText(value.toString());
-                getStyleClass().add("tile-text");
+                getStyleClass().addAll("game-label", "game-tile-" + value);
 
         }
 
@@ -35,27 +33,20 @@ public class Tile extends Label {
                 return value;
         }
 
-        public int getX() {
-                return x;
-        }
-
-        public int getY() {
-                return y;
-        }
 
         public void merge(Tile another) {
                 this.value += another.value;
                 setText(Integer.toString(value));
         }
 
-
+        public void setValue(int value) {
+                this.value = value;
+        }
 
         @Override
         public String toString() {
                 return "Tile{" +
                         "value=" + value +
-                        ", x=" + x +
-                        ", y=" + y +
                         '}';
         }
 }

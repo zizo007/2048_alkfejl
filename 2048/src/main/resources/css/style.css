@@ -1,3 +1,40 @@
 .tile-text {
     -fx-font-size: 30pt;
 }
+
+.game-grid {
+    -fx-background-color: #bbada0;
+    -fx-background-radius: 3;
+    -fx-border-radius: 3;
+}
+
+
+.game-label {
+    -fx-font-smoothing-type: lcd;
+    -fx-smooth: true;
+    -fx-font-family: 'Clear Sans Bold';
+}
+
+.game-tile-2    {
+    -fx-font-size: 55px;
+    -fx-text-fill: #776e65;
+    -fx-background-color: #eee4da;
+    -fx-background-radius: 3;
+    -fx-border-radius: 3;
+}
+
+.game-tile-4    {
+    -fx-font-size: 55px;
+    -fx-text-fill: #776e65;
+    -fx-background-color: #ede0c8;
+    -fx-background-radius: 3;
+    -fx-border-radius: 3;
+}
+
+
+.game-grid-cell {
+    -fx-fill: #cdc1b4;
+    -fx-stroke-width: 14px;
+    -fx-stroke-type: centered;
+    -fx-stroke: #BBADA0;
+}

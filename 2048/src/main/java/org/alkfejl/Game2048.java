@@ -1,8 +1,12 @@
 package org.alkfejl;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.scene.*;
@@ -18,31 +22,8 @@ public class Game2048 extends Application {
 
     @Override
     public void start(Stage stage) {
-
+        stage.setTitle("Fejlesztett Alkamazás");
         Board board = new Board();
-        board.createGrid();
-        board.fillTileArray();
-        for(int i = 0; i<16; i ++){
-            board.addRandomTile();
-        }
-
-        for(int i = 0; i<4; i ++){
-            System.out.print("[");
-            for(int j = 0; j<4; j ++){
-                System.out.print(board.getBoardPositions()[j][i].getValue());
-            }
-            System.out.println("]");
-        }
-
-        board.getBoardPositions()[0][0].merge(board.getBoardPositions()[0][1]);
-
-        for(int i = 0; i<4; i ++){
-            System.out.print("[");
-            for(int j = 0; j<4; j ++){
-                System.out.print(board.getBoardPositions()[j][i].getValue());
-            }
-            System.out.println("]");
-        }
 
         var label = new StackPane();
         label.getChildren().add(board.getGridGroup());
@@ -51,6 +32,28 @@ public class Game2048 extends Application {
         scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
 
         stage.setScene(scene);
+        final long startNanoTime = System.nanoTime();
+
+        scene.setOnKeyPressed(
+                new EventHandler<KeyEvent>()
+                {
+                    public void handle(KeyEvent e)
+                    {
+                        if (e.getCode() == KeyCode.LEFT){
+                            board.nextValidPosition();
+                            board.addRandomTile();
+                            for(int i = 0; i < 4; i++){
+                                for(int j = 0; j < 4; j++){
+                                    System.out.print(board.getBoardPositions()[j][i].getValue());
+                                }
+                                System.out.println();
+                            }
+
+                        }
+                    }
+                });
+
+
         stage.show();
     }
 
