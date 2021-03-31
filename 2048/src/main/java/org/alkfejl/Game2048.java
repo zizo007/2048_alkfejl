@@ -1,19 +1,12 @@
 package org.alkfejl;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.scene.*;
-import javafx.scene.paint.*;
-import javafx.scene.shape.*;
-import java.lang.Math;
-import java.util.Arrays;
 
 /**
  * JavaFX App
@@ -40,14 +33,15 @@ public class Game2048 extends Application {
                     public void handle(KeyEvent e)
                     {
                         if (e.getCode() == KeyCode.LEFT){
-                            board.nextValidPosition();
+                            //System.out.println(board.getGridGroup().getChildren());
+                            board.horizontalMovement();
                             board.addRandomTile();
-                            for(int i = 0; i < 4; i++){
+                           /* for(int i = 0; i < 4; i++){
                                 for(int j = 0; j < 4; j++){
                                     System.out.print(board.getBoardPositions()[j][i].getValue());
                                 }
                                 System.out.println();
-                            }
+                            }*/
 
                         }
                     }
