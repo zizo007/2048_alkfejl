@@ -34,8 +34,8 @@ public class Game2048 extends Application {
                     {
                         if (e.getCode() == KeyCode.LEFT){
                             //System.out.println(board.getGridGroup().getChildren());
-                            board.horizontalMovement();
-                            board.addRandomTile();
+                            board.moveLeft(-1);
+                            //board.addRandomTile();
                            /* for(int i = 0; i < 4; i++){
                                 for(int j = 0; j < 4; j++){
                                     System.out.print(board.getBoardPositions()[j][i].getValue());
@@ -44,6 +44,20 @@ public class Game2048 extends Application {
                             }*/
 
                         }
+                        if (e.getCode() == KeyCode.RIGHT){
+                            board.moveRight(1);
+                            //board.addRandomTile();
+                        }
+
+                        if (e.getCode() == KeyCode.UP){
+                            board.moveUp(-1);
+                        }
+
+                        if (e.getCode() == KeyCode.DOWN){
+                            board.moveDown(1);
+                        }
+
+                        board.addRandomTile();
                     }
                 });
 

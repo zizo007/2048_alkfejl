@@ -12,7 +12,7 @@ public class Tile extends Label {
 
 
         Tile(Integer value) {
-                final int squareSize = 100-10;
+                final int squareSize = 90;
                 setMinSize(squareSize, squareSize);
                 setMaxSize(squareSize, squareSize);
                 setPrefSize(squareSize, squareSize);
@@ -34,11 +34,6 @@ public class Tile extends Label {
         }
 
 
-        public void merge(Tile another) {
-                this.value += another.value;
-                setText(Integer.toString(value));
-        }
-
         public void setValue(int value) {
                 this.value = value;
         }
@@ -50,13 +45,6 @@ public class Tile extends Label {
                         '}';
         }
 
-        public static boolean inHorizontalBounds( int j){
-                return j > 0 && j < Board.BOARD_SIZE;
-        }
-
-        public static boolean inVerticalBounds( int i){
-                return i > 0 && i < Board.BOARD_SIZE;
-        }
 }
 
 
