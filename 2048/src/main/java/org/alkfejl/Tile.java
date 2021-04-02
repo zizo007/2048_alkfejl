@@ -24,10 +24,12 @@ public class Tile extends Label {
 
         }
 
+
         public static Tile newRandomTile() {
                 int value = new Random().nextDouble() < 0.9 ? 2 : 4;
                 return new Tile(value);
         }
+
 
         public int getValue() {
                 return value;
@@ -38,13 +40,13 @@ public class Tile extends Label {
                 this.value = value;
         }
 
+
         @Override
         public String toString() {
                 return "Tile{" +
                         "value=" + value +
                         '}';
         }
-
 }
 
 

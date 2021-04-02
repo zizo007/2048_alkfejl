@@ -4,6 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Board extends Pane {
@@ -11,52 +12,50 @@ public class Board extends Pane {
     public static final int BOARD_SIZE = 4;
     public static final int SQUARE_SIZE = 100;
     private final Group gridGroup = new Group();
-    private  Tile[][] boardPositions = new Tile[BOARD_SIZE][BOARD_SIZE];
-    private final int TILE_OFFSET = 7;
+    private final Tile[][] boardPositions = new Tile[BOARD_SIZE][BOARD_SIZE];
 
 
     public Board(){
-        createGrid();
-        fillTileArray();
+        initaliezeBoard();
         gridGroup.getStyleClass().add("game-grid");
     }
 
 
-    public void fillTileArray(){
+    public Group getGridGroup() {
+        return gridGroup;
+    }
+
+
+    public Tile[][] getBoardPositions() {
+        return boardPositions;
+    }
+
+
+    public void initaliezeBoard(){
+        //fill the array with empty tiles, necessary for moving them
+        //and add them to the grid
         for(int i = 0; i < BOARD_SIZE; i ++ ){
             for(int j = 0; j < BOARD_SIZE; j ++){
                 boardPositions[i][j] = new Tile(0);
+                gridGroup.getChildren().add(createCell(i,j));
             }
         }
+        //ez még nem biztos h itt marad
         addRandomTile();
         addRandomTile();
     }
 
 
     private Rectangle createCell(int i, int j){
-        //remove magic numbers
         Rectangle cell = new Rectangle(SQUARE_SIZE,SQUARE_SIZE);
+        //offset each tile so they are perfectly in the grid cells
+        int TILE_OFFSET = 7;
         cell.setX(i * SQUARE_SIZE - TILE_OFFSET);
         cell.setY(j * SQUARE_SIZE - TILE_OFFSET);
         cell.getStyleClass().add("game-grid-cell");
         return cell;
     }
 
-    public void createGrid(){
-        for(int i = 0; i < BOARD_SIZE; i ++ ){
-            for(int j = 0; j < BOARD_SIZE; j ++){
-                gridGroup.getChildren().add(createCell(i,j));
-            }
-        }
-    }
-
-    public Group getGridGroup() {
-        return gridGroup;
-    }
-
-    public Tile[][] getBoardPositions() {
-        return boardPositions;
-    }
 
     public void addRandomTile(){
         Tile tile = Tile.newRandomTile();
@@ -67,22 +66,38 @@ public class Board extends Pane {
         gridGroup.getChildren().add(tile);
     }
 
-    public int[] getValidRandomLocation(){
-        int[] ans = new int[2];
-        int rand_x = new Random().nextInt(BOARD_SIZE)* SQUARE_SIZE;
-        int rand_y = new Random().nextInt(BOARD_SIZE)* SQUARE_SIZE;
-        Tile actualTile = boardPositions[rand_x/SQUARE_SIZE][rand_y/SQUARE_SIZE];
-        //toDo stop generating when no more space is left
-        if(actualTile.getValue() != 0){
-             return getValidRandomLocation();
-        }
-        else {
-            ans[0] = rand_x;
-            ans[1] = rand_y;
 
-        }
+    public int[] getValidRandomLocation(){
+        ArrayList<int []> emptyPositions = getEmptyLocations();
+        int randomIndex = new Random().nextInt(emptyPositions.size());
+        int x = emptyPositions.get(randomIndex)[0] * SQUARE_SIZE;
+        int y = emptyPositions.get(randomIndex)[1] * SQUARE_SIZE;
+
+        int[] ans = new int[2];
+        ans[0] = x;
+        ans[1] = y;
+
         return ans;
     }
+
+    public ArrayList<int[]> getEmptyLocations(){
+        //returns the i,j positions of empty positions
+        ArrayList<int []> emptyPositions = new ArrayList<>();
+        int[][] values = getTileValues();
+        for(int i = 0; i < BOARD_SIZE; i ++ ){
+            for(int j = 0; j < BOARD_SIZE; j ++){
+                if(values[j][i] == 0){
+                    int[] position = new int[2];
+                    position[0] = i;
+                    position[1] = j;
+                    emptyPositions.add(position);
+                }
+            }
+        }
+        return emptyPositions;
+    }
+
+
 
 
 
@@ -222,5 +237,17 @@ public class Board extends Pane {
         gridGroup.getChildren().remove(oldTile);
         oldTile.setValue(0);
     }
+
+    public int[][] getTileValues(){
+        int[][] values = new int[BOARD_SIZE][BOARD_SIZE];
+        for(int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                values[i][j] = boardPositions[j][i].getValue();
+            }
+        }
+        return values;
+    }
+
+
 
 }
