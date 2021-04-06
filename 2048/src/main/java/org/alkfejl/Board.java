@@ -10,6 +10,7 @@ import java.util.Random;
 
 public class Board extends GridPane {
 
+    private int score;
     public static final int BOARD_SIZE = 4;
     public static final int SQUARE_SIZE = 100;
     private final Group gridGroup = new Group();
@@ -17,10 +18,14 @@ public class Board extends GridPane {
 
 
     public Board(){
+        Score score = new Score(0);
         initaliezeBoard();
         gridGroup.getStyleClass().add("game-grid");
     }
 
+    public int getScore() {
+        return score;
+    }
 
     public Group getGridGroup() {
         return gridGroup;
@@ -199,6 +204,7 @@ public class Board extends GridPane {
                 gridGroup.getChildren().remove(neighbourTile);
                 tile.setLayoutX((temp) * SQUARE_SIZE);
                 boardPositions[temp][i] = tile;
+                score += tile.getValue();
             }
             else {
                 tile = new Tile(oldTile.getValue());
@@ -230,6 +236,8 @@ public class Board extends GridPane {
                 gridGroup.getChildren().remove(neighbourTile);
                 tile.setLayoutY((temp) * SQUARE_SIZE);
                 boardPositions[j][temp] = tile;
+                score += tile.getValue();
+
             }
             else {
                 tile = new Tile(oldTile.getValue());

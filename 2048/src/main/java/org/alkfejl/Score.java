@@ -11,7 +11,6 @@ public class Score extends Label {
     public Score(int score) {
         this.score = score;
         setText(Integer.toString(score));
-        getStyleClass().add("game-title");
     }
 
     public int getScore() {

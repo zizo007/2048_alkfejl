@@ -15,9 +15,36 @@
 }
 
 .game-title {
+    -fx-fill: #776e65;
     -fx-font-size: 80px;
-    -fx-text-fill: #776e65;
     -fx-padding: 10px 25px 25px 45px;
+}
+
+.score-box{
+    -fx-padding: 15px 25px 0 20px;
+}
+
+.score{
+    -fx-fill: #776e65;
+    -fx-font-size: 30px;
+    -fx-text-alignment: center;
+    -fx-font-weight: bold;
+    -fx-padding: 15px 25px;
+
+}
+
+.label-style{
+    -fx-background-color: #FAF8F0;
+    -fx-alignment: bottom-center;
+    -fx-padding: 0 0 50px 0;
+}
+
+.restart-button {
+    -fx-font-size: 25px;
+    -fx-background-color: #8f7a66;
+    -fx-border-radius: 3px;
+    -fx-text-fill: #f9f6f2;
+    -fx-text-alignment: center;
 }
 
 
