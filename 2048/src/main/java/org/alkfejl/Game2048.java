@@ -3,15 +3,14 @@ package org.alkfejl;
 import java.util.Arrays;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -25,49 +24,70 @@ public class Game2048 extends Application {
 
     @Override
     public void start(Stage stage) {
-        var restartButton = new Button("New Game");
-        //restartButton.getStyleClass().add("restart-button");
-
-       /* restartButton.setOnAction(actionEvent -> {
-            stage.close();
-        });*/
 
         stage.setTitle("Fejlesztett Alkamazás");
         Board board = new Board();
         var title = new Text("2048");
-        var score = new Text("Score\n" + board.getScore());
         title.getStyleClass().add("game-title");
+
+        var score = new Text("Score\n" + board.getScore());
         score.getStyleClass().add("score");
 
-        var label = new StackPane();
-        var topBox = new HBox();
         var titleBox = new HBox();
-        var scoreBox = new VBox();
-        var buttonBox = new HBox();
-        //buttonBox.getChildren().add(restartButton);
-        topBox.getChildren().add(titleBox);
-        topBox.getChildren().add(scoreBox);
-        scoreBox.getChildren().add(score);
-        scoreBox.getChildren().add(buttonBox);
-        scoreBox.getStyleClass().add("score-box");
-       //scoreBox.getChildren().add(restartButton);
-        titleBox.getChildren().add(title);
-        titleBox.getStyleClass().add("game-title");
+        titleBox.getChildren().addAll(title);
 
-        //titleBox.getChildren().add(scoreBox);
 
-        label.getChildren().add(topBox);
-        label.getChildren().add(board.getGridGroup());
-        // System.out.println(Arrays.deepToString(board.getBoardPositions()));
-        var scene = new Scene(label, SCENE_WIDTH, SCENE_HEIGHT);
+        var scoreRestartBox = new VBox();
+        scoreRestartBox.setSpacing(10);
+        scoreRestartBox.setAlignment(Pos.CENTER);
+        var restartButton = new Button("New Game");
+        restartButton.getStyleClass().add("restart-button");
+
+
+
+        scoreRestartBox.getStyleClass().add("score-box");
+        scoreRestartBox.getChildren().addAll(score, restartButton);
+
+
+
+        var topElements = new BorderPane();
+        topElements.setLeft(titleBox);
+        BorderPane.setAlignment(titleBox, Pos.CENTER_LEFT);
+        BorderPane.setMargin(titleBox, new Insets(20,0, 0, (int)(SCENE_WIDTH / 12)));
+        topElements.setRight(scoreRestartBox);
+        BorderPane.setAlignment(scoreRestartBox, Pos.CENTER_RIGHT);
+        BorderPane.setMargin(scoreRestartBox, new Insets(20, ((int)(SCENE_WIDTH / 12)), (((int)(SCENE_HEIGHT/ 25))), 0));
+
+
+
+
+        var main = new BorderPane();
+        main.setTop(topElements);
+
+        main.setCenter(board.getGridGroup());
+        BorderPane.setAlignment(board.getGridGroup(), Pos.BOTTOM_CENTER);
+        BorderPane.setMargin(board.getGridGroup(), new Insets(0,0, 50,0 ));
+
+        var scene = new Scene(main, SCENE_WIDTH, SCENE_HEIGHT);
         scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+
         //this doesnt wanna load from css
-        label.setStyle("-fx-background-color: #FAF8F0; -fx-alignment: bottom-center; -fx-padding: 0 0 50px 0 ");
+        main.setStyle("-fx-background-color: #FAF8F0; -fx-padding: 0 0 0px 0 ");
         stage.setScene(scene);
-        final long startNanoTime = System.nanoTime();
+
+
+        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                System.out.println("asd");
+                main.requestFocus();
+            }
+        };
+
+        restartButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
 
         scene.setOnKeyPressed(
-                e -> {
+                (KeyEvent e) -> {
                     int[][] boardPreMove = board.getTileValues();
                     if (e.getCode() == KeyCode.LEFT) {
                         board.moveLeft(-1);
@@ -91,6 +111,10 @@ public class Game2048 extends Application {
                 });
 
         stage.show();
+        //anyad
+        main.requestFocus();
+        //main.onKeyPressedProperty().bind(scene.onKeyPressedProperty());
+
     }
 
 

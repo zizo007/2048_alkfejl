@@ -17,19 +17,21 @@
 .game-title {
     -fx-fill: #776e65;
     -fx-font-size: 80px;
-    -fx-padding: 10px 25px 25px 45px;
 }
 
 .score-box{
-    -fx-padding: 15px 25px 0 20px;
+    -fx-font-size: 25px;
+    -fx-border-radius: 3px;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
 }
 
 .score{
     -fx-fill: #776e65;
     -fx-font-size: 30px;
     -fx-text-alignment: center;
-    -fx-font-weight: bold;
-    -fx-padding: 15px 25px;
+    -fx-text-fill: #f9f6f2;
+    -fx-padding: 0 0 0 60px;
 
 }
 
