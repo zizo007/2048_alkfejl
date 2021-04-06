@@ -1,13 +1,14 @@
 package org.alkfejl;
 
 import javafx.scene.Group;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Board extends Pane {
+public class Board extends GridPane {
 
     public static final int BOARD_SIZE = 4;
     public static final int SQUARE_SIZE = 100;
@@ -98,8 +99,12 @@ public class Board extends Pane {
     }
 
 
-
-
+    /**
+     All movement is implemented the same way:
+        Traverse the board
+        if the Value of the tile is not 0 and it can move we look for the farthest valid place
+        pass this position the movement function
+    */
 
     public void moveRight(int direction){
         for(int i = BOARD_SIZE - 1; i >= 0; i--) {
@@ -185,6 +190,8 @@ public class Board extends Pane {
 
     public void moveHorizontally(int i, int temp, int direction, Tile neighbourTile, Tile oldTile){
         Tile tile;
+        //if neighbourtile is not 0 we check if same value
+        // if yes we merge and delete the tile that got merged
         if(neighbourTile.getValue() != 0){
 
             if(oldTile.getValue() == neighbourTile.getValue()){
@@ -199,6 +206,8 @@ public class Board extends Pane {
                 boardPositions[temp - direction][i] = tile;
             }
         }
+        // this branch runs when we didnt find any not 0 value tiles in the direction we are moving
+        // we just place the tile on the edge of the board(which edge depends on the direction of movement)
         else{
             tile = new Tile(oldTile.getValue());
             tile.setLayoutX(temp * SQUARE_SIZE);
@@ -212,6 +221,7 @@ public class Board extends Pane {
 
 
     public void moveVertically(int j, int temp, int direction, Tile neighbourTile, Tile oldTile){
+        //same as moveHorizontally
         Tile tile;
         if(neighbourTile.getValue() != 0){
 
