@@ -11,7 +11,7 @@ import java.util.Random;
 public class Board extends GridPane {
 
     private int score;
-    public static final int BOARD_SIZE = 4;
+    public static final int BOARD_SIZE = 6;
     public static final int SQUARE_SIZE = 100;
     private final Group gridGroup = new Group();
     private final Tile[][] boardPositions = new Tile[BOARD_SIZE][BOARD_SIZE];
