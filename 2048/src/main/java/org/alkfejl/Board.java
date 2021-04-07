@@ -6,19 +6,21 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Board extends GridPane {
 
     private int score;
-    public static final int BOARD_SIZE = 6;
+    public static final int BOARD_SIZE = 3;
+    public static final int SCORE_TO_WIN = 32;
     public static final int SQUARE_SIZE = 100;
     private final Group gridGroup = new Group();
     private final Tile[][] boardPositions = new Tile[BOARD_SIZE][BOARD_SIZE];
 
 
     public Board(){
-        Score score = new Score(0);
+        //Score score = new Score(0);
         initaliezeBoard();
         gridGroup.getStyleClass().add("game-grid");
     }
@@ -264,6 +266,50 @@ public class Board extends GridPane {
             }
         }
         return values;
+    }
+
+
+    public void checkWinner(){
+        int[][] values = getTileValues();
+        for(int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++){
+                if (values[i][j] == SCORE_TO_WIN){
+                    //System.out.println("asd");
+                }
+            }
+        }
+    }
+
+    public boolean tileMatchesAvailable(){
+        //check every 3 tile group horizontally and vertically, if 2 values match that means a merge is available and
+        //the game is not over
+
+        int[][] values = getTileValues();
+        for(int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 1; j < BOARD_SIZE - 1; j++){
+                int leftNeighbour = values[i][j - 1];
+                int tile = values[i][j];
+                int rightNeighbour = values[i][j + 1];
+
+                if (leftNeighbour == tile || tile == rightNeighbour){
+                    return true;
+                }
+            }
+        }
+
+        for(int i = 1; i < BOARD_SIZE - 1; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++){
+                int leftNeighbour = values[i - 1][j];
+                int tile = values[i][j];
+                int rightNeighbour = values[i + 1][j];
+
+                if (leftNeighbour == tile || tile == rightNeighbour){
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 

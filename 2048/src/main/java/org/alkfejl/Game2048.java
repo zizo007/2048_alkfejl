@@ -31,12 +31,7 @@ public class Game2048 extends Application {
 
         stage.setScene(scene);
 
-        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                start(stage);
-            }
-        };
+        EventHandler<MouseEvent> eventHandler = mouseEvent -> start(stage);
 
 
         gameManager.getRestartButton().addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -58,14 +53,30 @@ public class Game2048 extends Application {
                     }
                     int[][] boardAfterMove = gameManager.getBoard().getTileValues();
 
-                    //if direction of movements was not valid, meaning no tile has moved, dont generate new tile
+                    gameManager.getBoard().checkWinner();
+
+
                     if (!Arrays.deepEquals(boardPreMove, boardAfterMove)) {
                         gameManager.getBoard().addRandomTile();
                         gameManager.getScore().setText("Score\n" + gameManager.getBoard().getScore());
                     }
+                    //if direction of movements was not valid, meaning no tile has moved, dont generate new tile
+                    if (gameManager.getBoard().getEmptyLocations().size() == 0 && !gameManager.getBoard().tileMatchesAvailable()){
+                        System.out.println("we done now");
+                    }
+
                 });
 
+        //ez itt még lehet buggos majd popup windowwal megnezzeuk
+       scene.setOnKeyReleased(keyEvent -> {
+            if (gameManager.getBoard().getEmptyLocations().size() == 0 && !gameManager.getBoard().tileMatchesAvailable()){
+                System.out.println("we done now");
+            }
+        });
+
+
         stage.show();
+
         //anyad
         mainScene.requestFocus();
         //main.onKeyPressedProperty().bind(scene.onKeyPressedProperty());
