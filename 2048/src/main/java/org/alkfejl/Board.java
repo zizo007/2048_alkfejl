@@ -19,7 +19,7 @@ public class Board extends GridPane {
 
     public Board(){
         //Score score = new Score(0);
-        SCORE_TO_WIN = 32;
+        SCORE_TO_WIN = 2048;
         initializeBoard();
         gridGroup.getStyleClass().add("game-grid");
     }
