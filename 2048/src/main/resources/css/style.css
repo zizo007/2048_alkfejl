@@ -2,6 +2,34 @@
     -fx-background-color: #FAF8F0;
 }
 
+.Dialog{
+    -fx-background-color: #FAF8F0;
+}
+.Dialog > .button-bar > .container{
+    -fx-background-color: #FAF8F0;
+}
+.Dialog > .label.content{
+    -fx-background-color: #FAF8F0;;
+}
+
+.Dialog .header-panel {
+    -fx-background-color: #FAF8F0;;
+}
+
+.Dialog .header-panel .label{
+    -fx-text-alignment: center;
+    -fx-text-fill:#776e65;
+    -fx-font-size:40px;
+}
+
+.Dialog .button{
+    -fx-font-size: 25px;
+    -fx-background-color: #8f7a66;
+    -fx-border-radius: 3px;
+    -fx-text-fill: #f9f6f2;
+    -fx-text-alignment: center;
+}
+
 
 .tile-text {
     -fx-font-size: 30pt;
@@ -48,9 +76,6 @@
     -fx-text-fill: #f9f6f2;
     -fx-text-alignment: center;
 }
-
-
-
 
 
 .game-label {
@@ -146,3 +171,5 @@
     -fx-stroke-type: centered;
     -fx-stroke: #BBADA0;
 }
+
+

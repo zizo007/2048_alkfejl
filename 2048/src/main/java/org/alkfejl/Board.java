@@ -2,18 +2,16 @@ package org.alkfejl;
 
 import javafx.scene.Group;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public class Board extends GridPane {
 
     private int score;
-    public static final int BOARD_SIZE = 3;
-    public static final int SCORE_TO_WIN = 32;
+    public static final int BOARD_SIZE = 4;
+    public static int SCORE_TO_WIN;
     public static final int SQUARE_SIZE = 100;
     private final Group gridGroup = new Group();
     private final Tile[][] boardPositions = new Tile[BOARD_SIZE][BOARD_SIZE];
@@ -21,8 +19,13 @@ public class Board extends GridPane {
 
     public Board(){
         //Score score = new Score(0);
-        initaliezeBoard();
+        SCORE_TO_WIN = 32;
+        initializeBoard();
         gridGroup.getStyleClass().add("game-grid");
+    }
+
+    public static void setScoreToWin(int scoreToWin) {
+        SCORE_TO_WIN = scoreToWin;
     }
 
     public int getScore() {
@@ -39,7 +42,7 @@ public class Board extends GridPane {
     }
 
 
-    public void initaliezeBoard(){
+    public void initializeBoard(){
         //fill the array with empty tiles, necessary for moving them
         //and add them to the grid
         for(int i = 0; i < BOARD_SIZE; i ++ ){
@@ -269,15 +272,16 @@ public class Board extends GridPane {
     }
 
 
-    public void checkWinner(){
+    public boolean checkWinner(){
         int[][] values = getTileValues();
         for(int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++){
                 if (values[i][j] == SCORE_TO_WIN){
-                    //System.out.println("asd");
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     public boolean tileMatchesAvailable(){

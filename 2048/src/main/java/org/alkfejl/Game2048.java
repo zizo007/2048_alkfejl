@@ -4,11 +4,11 @@ import java.util.Arrays;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -31,9 +31,8 @@ public class Game2048 extends Application {
 
         stage.setScene(scene);
 
+        //restart event
         EventHandler<MouseEvent> eventHandler = mouseEvent -> start(stage);
-
-
         gameManager.getRestartButton().addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
 
         scene.setOnKeyPressed(
@@ -55,29 +54,41 @@ public class Game2048 extends Application {
 
                     gameManager.getBoard().checkWinner();
 
-
+                    //if direction of movements was not valid, meaning no tile has moved, dont generate new tile
                     if (!Arrays.deepEquals(boardPreMove, boardAfterMove)) {
                         gameManager.getBoard().addRandomTile();
                         gameManager.getScore().setText("Score\n" + gameManager.getBoard().getScore());
                     }
-                    //if direction of movements was not valid, meaning no tile has moved, dont generate new tile
-                    if (gameManager.getBoard().getEmptyLocations().size() == 0 && !gameManager.getBoard().tileMatchesAvailable()){
-                        System.out.println("we done now");
-                    }
+
 
                 });
 
-        //ez itt még lehet buggos majd popup windowwal megnezzeuk
-       scene.setOnKeyReleased(keyEvent -> {
-            if (gameManager.getBoard().getEmptyLocations().size() == 0 && !gameManager.getBoard().tileMatchesAvailable()){
-                System.out.println("we done now");
-            }
-        });
+        scene.setOnKeyReleased(keyEvent -> {
+            if (gameManager.getBoard().checkWinner()){
+                ButtonType keepPlaying = new ButtonType("Keep Playing", ButtonBar.ButtonData.OK_DONE);
+                ButtonType newGame = new ButtonType("New Game", ButtonBar.ButtonData.OK_DONE);
+               var answer = gameManager.gameWon(keepPlaying, newGame);
 
+                if (answer.isPresent() && answer.get() == newGame){
+                    start(stage);
+                }
+                if (answer.isPresent() && answer.get() == keepPlaying){
+                    //this allows the player to play forever
+                    // because at no point in the game will a tile contain value of 50
+                    Board.setScoreToWin(50);
+                }
+            }
+
+           else if (gameManager.getBoard().getEmptyLocations().size() == 0 && !gameManager.getBoard().tileMatchesAvailable()){
+                //notify player if game ends
+                gameManager.gameOver();
+                start(stage);
+
+           }
+        });
 
         stage.show();
 
-        //anyad
         mainScene.requestFocus();
         //main.onKeyPressedProperty().bind(scene.onKeyPressedProperty());
 

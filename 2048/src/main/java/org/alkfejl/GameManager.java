@@ -2,12 +2,14 @@ package org.alkfejl;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.Optional;
 
 import static org.alkfejl.Game2048.SCENE_HEIGHT;
 import static org.alkfejl.Game2048.SCENE_WIDTH;
@@ -61,10 +63,28 @@ public class GameManager {
         return main;
     }
 
+    public void gameOver(){
+        ButtonType restart = new ButtonType("Try again", ButtonBar.ButtonData.OK_DONE);
+        Alert gameEnded = new Alert(Alert.AlertType.INFORMATION, null, restart);
+        gameEnded.setTitle("Game Over");
+        gameEnded.setHeaderText("You Lost");
+        DialogPane dialogPane = gameEnded.getDialogPane();
+        dialogPane.getStylesheets().add(
+                getClass().getResource("/css/style.css").toExternalForm());
+        dialogPane.getStyleClass().add("Dialog");
+        gameEnded.showAndWait();
+    }
 
-    public void restart(Stage stage){
-        this.board = new Board();
-        this.score = new Text("Score\n" + board.getScore());
+
+    public Optional<ButtonType> gameWon(ButtonType keepplaying, ButtonType newgame){
+        Alert winner = new Alert(Alert.AlertType.INFORMATION, null, keepplaying, newgame);
+        winner.setTitle("You Win");
+        winner.setHeaderText("What would you like to do?");
+        DialogPane dialogPane = winner.getDialogPane();
+        dialogPane.getStylesheets().add(
+                getClass().getResource("/css/style.css").toExternalForm());
+        dialogPane.getStyleClass().add("Dialog");
+        return winner.showAndWait();
     }
 
 
