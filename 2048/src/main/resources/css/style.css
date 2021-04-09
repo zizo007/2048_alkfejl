@@ -77,6 +77,44 @@
     -fx-text-alignment: center;
 }
 
+.menu-button {
+    -fx-font-size: 30px;
+    -fx-background-color: #8f7a66;
+    -fx-text-fill: #f9f6f2;
+    -fx-text-alignment: center;
+    -fx-padding: 10 25 10 25;
+}
+
+.text-field:focused {
+    -fx-background-color:
+            #8f7a66,
+            #FFFFFF;
+    -fx-text-fill: black;
+}
+
+
+.combo-box-base {
+    -fx-font-size: 30px;
+    -fx-background-color: #8f7a66;
+    -fx-background-radius: 3px, 3px, 2px, 1px;
+    -fx-padding: 0 5 0 5;
+}
+
+.combo-box-popup .list-view .list-cell
+{
+    -fx-background-color: #8f7a66;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover
+{
+    -fx-background-color: white;
+    -fx-text-fill: -fx-text-inner-color;
+}
+
+.combo-box .list-cell{
+    -fx-text-fill: #f9f6f2;
+}
+
 
 .game-label {
     -fx-font-smoothing-type: lcd;

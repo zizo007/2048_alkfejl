@@ -4,7 +4,9 @@ import java.util.Arrays;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -28,10 +30,10 @@ public class Game2048 extends Application {
     @Override
     public void start(Stage stage) {
         mainWindow = stage;
+        constructMenuScene();
 
         var gameManager = new GameManager();
-
-        constructScene1();
+        //constructMenuScene();
 
         var mainScene = gameManager.initialize();
         gameScene = new Scene(mainScene, SCENE_WIDTH, SCENE_HEIGHT);
@@ -117,24 +119,48 @@ public class Game2048 extends Application {
     }
 
 
-    private void constructScene1() {
+    private void constructMenuScene() {
         var title = new Text("2048");
+        title.getStyleClass().add("game-title");
+
         var menuBox = new VBox();
-        TextField nameInput = new TextField ();
+        menuBox.setAlignment(Pos.CENTER);
+        menuBox.setSpacing(5);
+        TextField nameInput = new TextField();
+        nameInput.setPromptText("Enter your nickname");
+        nameInput.setPrefHeight(50);
+        nameInput.setFocusTraversable(false);
+        nameInput.getStyleClass().add("text-field");
 
         ObservableList<String> options =
                 FXCollections.observableArrayList("4x4", "5x5", "6x6", "8x8");
-        ComboBox<String> gridSize = new ComboBox<>(options);
-        gridSize.setValue("4x4");
+        ComboBox<String> gridSizeSelector = new ComboBox<>(options);
+        gridSizeSelector.setValue("4x4");
+
+        EventHandler<ActionEvent> event =
+                e -> Board.setBoardSize (gridSizeSelector.getValue().charAt(0));
+
+        gridSizeSelector.setOnAction(event);
+
+
+
+
         //majd kesobb
-        Button pictureASAS = new Button("pictures");
+        Button pictureConfig = new Button("Pictures");
+        pictureConfig.getStyleClass().add("menu-button");
+        Button topList = new Button("Toplist");
+        topList.getStyleClass().add("menu-button");
+        topList.setPrefWidth(170);
         Button play = new Button("Play");
-        play.getStyleClass().add("restart-button");
+        play.setPrefWidth(170);
+        play.getStyleClass().add("menu-button");
         play.setOnAction(actionEvent -> {
             mainWindow.setScene(gameScene);
         });
 
-        menuBox.getChildren().addAll(title,nameInput,gridSize,pictureASAS,play);
+
+        menuBox.getChildren().addAll(title,nameInput,gridSizeSelector,pictureConfig,topList,play);
+
         menuScene = new Scene(menuBox, 200, 400);
         menuScene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
     }

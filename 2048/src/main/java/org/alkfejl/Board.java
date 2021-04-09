@@ -10,7 +10,7 @@ import java.util.Random;
 public class Board extends GridPane {
 
     private int score;
-    public static final int BOARD_SIZE = 4;
+    public static int BOARD_SIZE = 4;
     public static int SCORE_TO_WIN;
     public static final int SQUARE_SIZE = 100;
     private final Group gridGroup = new Group();
@@ -77,6 +77,10 @@ public class Board extends GridPane {
         gridGroup.getChildren().add(tile);
     }
 
+
+    public static void setBoardSize(int boardSize) {
+        BOARD_SIZE = boardSize;
+    }
 
     public int[] getValidRandomLocation(){
         ArrayList<int []> emptyPositions = getEmptyLocations();
