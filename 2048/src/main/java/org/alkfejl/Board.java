@@ -11,7 +11,7 @@ public class Board extends GridPane {
 
     private int score;
     public static int BOARD_SIZE = 4;
-    public static int SCORE_TO_WIN;
+    public static int SCORE_TO_WIN = 2048;
     public static final int SQUARE_SIZE = 100;
     private final Group gridGroup = new Group();
     private final Tile[][] boardPositions = new Tile[BOARD_SIZE][BOARD_SIZE];
@@ -19,7 +19,7 @@ public class Board extends GridPane {
 
     public Board(){
         //Score score = new Score(0);
-        SCORE_TO_WIN = 2048;
+        //SCORE_TO_WIN = 2048;
         initializeBoard();
         gridGroup.getStyleClass().add("game-grid");
     }
@@ -35,6 +35,8 @@ public class Board extends GridPane {
     public Group getGridGroup() {
         return gridGroup;
     }
+
+
 
 
     public Tile[][] getBoardPositions() {
@@ -80,6 +82,10 @@ public class Board extends GridPane {
 
     public static void setBoardSize(int boardSize) {
         BOARD_SIZE = boardSize;
+    }
+
+    public static int getBoardSize() {
+        return BOARD_SIZE;
     }
 
     public int[] getValidRandomLocation(){

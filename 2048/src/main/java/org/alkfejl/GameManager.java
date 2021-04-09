@@ -1,28 +1,31 @@
 package org.alkfejl;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.util.Optional;
 
-import static org.alkfejl.Game2048.SCENE_HEIGHT;
-import static org.alkfejl.Game2048.SCENE_WIDTH;
+import static org.alkfejl.Game2048.*;
 
 public class GameManager {
 
     private Board board;
-    private Button restartButton;
+    private Button restartButton, playButton;
     private Text score;
+    private TextField levelInput;
 
 
-
-    public BorderPane initialize(){
+    public BorderPane constructGameScene(){
         this.board = new Board();
         var title = new Text("2048");
         title.getStyleClass().add("game-title");
@@ -62,6 +65,58 @@ public class GameManager {
 
         return main;
     }
+
+    public Scene constructMenuScene() {
+        Scene menuScene;
+        var title = new Text("2048");
+        title.getStyleClass().add("game-title");
+
+        var menuBox = new VBox();
+        menuBox.setAlignment(Pos.CENTER);
+        menuBox.setSpacing(5);
+        TextField nameInput = new TextField();
+        nameInput.setPromptText("Enter your nickname");
+        nameInput.setPrefHeight(50);
+        nameInput.setFocusTraversable(false);
+        nameInput.getStyleClass().add("text-field");
+        levelInput = new TextField();
+        levelInput.setPromptText("Levels");
+        levelInput.setPrefHeight(50);
+        levelInput.setFocusTraversable(false);
+        levelInput.getStyleClass().add("text-field");
+
+        ObservableList<String> options =
+                FXCollections.observableArrayList("4x4", "5x5", "6x6", "8x8");
+        ComboBox<String> gridSizeSelector = new ComboBox<>(options);
+        gridSizeSelector.setValue("4x4");
+
+        EventHandler<ActionEvent> event =
+                e -> Board.setBoardSize (Integer.parseInt(String.valueOf(gridSizeSelector.getValue().charAt(0))));
+
+        gridSizeSelector.setOnAction(event);
+        gridSizeSelector.setPrefWidth(245);
+
+
+        //majd kesobb
+        Button pictureConfig = new Button("Pictures");
+        pictureConfig.getStyleClass().add("menu-button");
+        pictureConfig.setPrefWidth(245);
+        Button topList = new Button("Toplist");
+        topList.getStyleClass().add("menu-button");
+        topList.setPrefWidth(245);
+        playButton = new Button("Play");
+        playButton.setPrefWidth(245);
+        playButton.getStyleClass().add("menu-button");
+
+
+        menuBox.getChildren().addAll(title,nameInput,levelInput,gridSizeSelector,pictureConfig,topList, playButton);
+
+        menuScene = new Scene(menuBox, 250, 500);
+        menuScene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+
+        return menuScene;
+    }
+
 
     public void gameOver(){
         ButtonType restart = new ButtonType("Try again", ButtonBar.ButtonData.OK_DONE);
@@ -110,5 +165,13 @@ public class GameManager {
 
     public void setRestartButton(Button restartButton) {
         this.restartButton = restartButton;
+    }
+
+    public Button getPlayButton() {
+        return playButton;
+    }
+
+    public TextField getLevelInput() {
+        return levelInput;
     }
 }
