@@ -22,7 +22,7 @@ public class GameManager {
     private Board board;
     private Button restartButton, playButton;
     private Text score;
-    private TextField levelInput;
+    private TextField levelInput, nameInput;
 
 
     public BorderPane constructGameScene(){
@@ -74,7 +74,7 @@ public class GameManager {
         var menuBox = new VBox();
         menuBox.setAlignment(Pos.CENTER);
         menuBox.setSpacing(5);
-        TextField nameInput = new TextField();
+        nameInput = new TextField();
         nameInput.setPromptText("Enter your nickname");
         nameInput.setPrefHeight(50);
         nameInput.setFocusTraversable(false);
@@ -142,6 +142,17 @@ public class GameManager {
         return winner.showAndWait();
     }
 
+    public void invalidInput(){
+        Alert invalidInput = new Alert(Alert.AlertType.INFORMATION, null);
+        invalidInput.setHeaderText("Invalid input");
+        invalidInput.setHeaderText("Nickname and levels must be filled out,\n levels must be an integert");
+        DialogPane dialogPane = invalidInput.getDialogPane();
+        dialogPane.getStylesheets().add(
+                getClass().getResource("/css/style.css").toExternalForm());
+        dialogPane.getStyleClass().add("Dialog");
+        invalidInput.showAndWait();
+    }
+
 
     public Board getBoard() {
         return board;
@@ -173,5 +184,9 @@ public class GameManager {
 
     public TextField getLevelInput() {
         return levelInput;
+    }
+
+    public TextField getNameInput() {
+        return nameInput;
     }
 }

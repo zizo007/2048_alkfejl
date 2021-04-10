@@ -2,7 +2,6 @@ package org.alkfejl;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.text.Text;
 
 import java.util.Random;
 

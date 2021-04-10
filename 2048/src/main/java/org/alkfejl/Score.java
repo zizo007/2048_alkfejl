@@ -4,7 +4,6 @@ import javafx.scene.control.Label;
 
 public class Score extends Label {
 
-    private final int LEFT_OFFSET = 20 * Board.BOARD_SIZE;
     private int score;
 
 
