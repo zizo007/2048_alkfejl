@@ -5,14 +5,14 @@ import java.util.Properties;
 
 public class PlayerConfiguration {
 
-    private static Properties properties = new Properties();
+    private static final Properties properties = new Properties();
 
 
     static{
         try{
             properties.load(PlayerConfiguration.class.getResourceAsStream("/application.properties"));
         } catch (IOException e){
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 

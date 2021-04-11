@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -23,6 +24,8 @@ public class Game2048 extends Application {
     private Scene menuScene, gameScene;
     private static boolean gameIsOpen = false;
     private BorderPane mainScene;
+    private static long startTime;
+    private static String name;
 
     public static int getSceneWidth() {
         return SCENE_WIDTH;
@@ -44,6 +47,14 @@ public class Game2048 extends Application {
         Game2048.gameIsOpen = gameIsOpen;
     }
 
+    public static long getStartTime() {
+        return startTime;
+    }
+
+    public static String getName() {
+        return name;
+    }
+
     @Override
     public void start(Stage stage) {
         mainWindow = stage;
@@ -54,11 +65,13 @@ public class Game2048 extends Application {
             mainWindow.setScene(menuScene);
 
             EventHandler<MouseEvent> eventHandler = mouseEvent -> {
-                if (!gameManager.getNameInput().getText().equals("") &&
-                        !gameManager.getLevelInput().getText().equals("")) {
+                name = gameManager.getNameInput().getText();
+                if (!name.equals("") && !gameManager.getLevelInput().getText().equals("")) {
                     try {
                         int levels = Integer.parseInt(gameManager.getLevelInput().getText());
                         Board.setScoreToWin((int) Math.pow(2, levels));
+
+
                         gameIsOpen = true;
                         mainWindow.requestFocus();
                         start(mainWindow);
@@ -73,6 +86,7 @@ public class Game2048 extends Application {
             gameManager.getPlayButton().addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
 
         } else {
+            startTime = System.nanoTime();
             SCENE_WIDTH = Board.BOARD_SIZE * 125;
             SCENE_HEIGHT = Board.BOARD_SIZE * 125 + 100;
             mainScene = gameManager.constructGameScene();

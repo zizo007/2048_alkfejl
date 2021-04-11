@@ -11,7 +11,7 @@ public class PlayerDAOImpl implements PlayerDAO{
 
     private static final String SELECT_ALL_PLAYER_SCORES = "SELECT * FROM scores";
     private static final String ADD_PLAYER_SCORE = "INSERT INTO scores (name, time, level, score) VALUES (?,?,?,?)";
-    private String connectionURL;
+    private final String connectionURL;
 
     public PlayerDAOImpl() {
         connectionURL = PlayerConfiguration.getValue("db.url");
@@ -27,6 +27,7 @@ public class PlayerDAOImpl implements PlayerDAO{
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SELECT_ALL_PLAYER_SCORES);
 
+
             while (resultSet.next()){
                 Player player = new Player();
                 player.setId(resultSet.getInt("id"));
@@ -35,13 +36,8 @@ public class PlayerDAOImpl implements PlayerDAO{
                 player.setLevel(resultSet.getInt("level"));
                 player.setTime(resultSet.getDouble("time"));
 
-
                 result.add(player);
             }
-
-
-
-
         } catch (SQLException exception){
            exception.printStackTrace();
         }
@@ -50,7 +46,50 @@ public class PlayerDAOImpl implements PlayerDAO{
     }
 
     @Override
-    public Player save(Player player) {
-        return null;
+    public void save(Player player) {
+        try{
+            Connection connection = DriverManager.getConnection(connectionURL);
+            PreparedStatement statement = connection.prepareStatement(ADD_PLAYER_SCORE, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1,player.getName());
+            statement.setDouble(2,player.getTime());
+            statement.setInt(3,player.getLevel());
+            statement.setInt(4,player.getScore());
+            statement.executeUpdate();
+
+            ResultSet genKeys = statement.getGeneratedKeys();
+            if(genKeys.next()){
+                player.setId(genKeys.getInt(1));
+            }
+        } catch (SQLException exception){
+            exception.printStackTrace();
+        }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

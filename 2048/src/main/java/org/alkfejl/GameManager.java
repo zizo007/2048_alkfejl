@@ -12,6 +12,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import org.alkfejl.dao.PlayerDAOImpl;
+import org.alkfejl.model.Player;
 
 import java.util.Optional;
 
@@ -23,9 +25,14 @@ public class GameManager {
     private Button restartButton, playButton;
     private Text score;
     private TextField levelInput, nameInput;
+    private Player player;
+    private long timeElapsed;
+    private PlayerDAOImpl dbManager = new PlayerDAOImpl();
 
 
-    public BorderPane constructGameScene(){
+    public BorderPane constructGameScene() {
+        player = new Player();
+
         this.board = new Board();
         var title = new Text("2048");
         title.getStyleClass().add("game-title");
@@ -50,17 +57,17 @@ public class GameManager {
         var topElements = new BorderPane();
         topElements.setLeft(titleBox);
         BorderPane.setAlignment(titleBox, Pos.CENTER_LEFT);
-        BorderPane.setMargin(titleBox, new Insets(20,0, 0, (int)(SCENE_WIDTH / 12)));
+        BorderPane.setMargin(titleBox, new Insets(20, 0, 0, (int) (SCENE_WIDTH / 12)));
         topElements.setRight(scoreRestartBox);
         BorderPane.setAlignment(scoreRestartBox, Pos.CENTER_RIGHT);
-        BorderPane.setMargin(scoreRestartBox, new Insets(20, ((int)(SCENE_WIDTH / 12)), (((int)(SCENE_HEIGHT/ 25))), 0));
+        BorderPane.setMargin(scoreRestartBox, new Insets(20, ((int) (SCENE_WIDTH / 12)), (((int) (SCENE_HEIGHT / 25))), 0));
 
         var main = new BorderPane();
         main.setTop(topElements);
 
         main.setCenter(board.getGridGroup());
         BorderPane.setAlignment(board.getGridGroup(), Pos.BOTTOM_CENTER);
-        BorderPane.setMargin(board.getGridGroup(), new Insets(0,0, 50,0 ));
+        BorderPane.setMargin(board.getGridGroup(), new Insets(0, 0, 50, 0));
         main.setStyle("-fx-background-color: #FAF8F0; -fx-padding: 0 0 0px 0 ");
 
         return main;
@@ -91,7 +98,7 @@ public class GameManager {
         gridSizeSelector.setValue("4x4");
 
         EventHandler<ActionEvent> event =
-                e -> Board.setBoardSize (Integer.parseInt(String.valueOf(gridSizeSelector.getValue().charAt(0))));
+                e -> Board.setBoardSize(Integer.parseInt(String.valueOf(gridSizeSelector.getValue().charAt(0))));
 
         gridSizeSelector.setOnAction(event);
         gridSizeSelector.setPrefWidth(245);
@@ -109,7 +116,7 @@ public class GameManager {
         playButton.getStyleClass().add("menu-button");
 
 
-        menuBox.getChildren().addAll(title,nameInput,levelInput,gridSizeSelector,pictureConfig,topList, playButton);
+        menuBox.getChildren().addAll(title, nameInput, levelInput, gridSizeSelector, pictureConfig, topList, playButton);
 
         menuScene = new Scene(menuBox, 250, 500);
         menuScene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
@@ -118,31 +125,53 @@ public class GameManager {
     }
 
 
-    public void gameOver(){
+    public void gameOver() {
+        saveScore();
+
         ButtonType restart = new ButtonType("Try again", ButtonBar.ButtonData.OK_DONE);
         Alert gameEnded = new Alert(Alert.AlertType.INFORMATION, null, restart);
         gameEnded.setTitle("Game Over");
         gameEnded.setHeaderText("You Lost");
+
         DialogPane dialogPane = gameEnded.getDialogPane();
         dialogPane.getStylesheets().add(
                 getClass().getResource("/css/style.css").toExternalForm());
         dialogPane.getStyleClass().add("Dialog");
+
         gameEnded.showAndWait();
     }
 
 
-    public Optional<ButtonType> gameWon(ButtonType keepplaying, ButtonType newgame){
+    public Optional<ButtonType> gameWon(ButtonType keepplaying, ButtonType newgame) {
+        saveScore();
+
         Alert winner = new Alert(Alert.AlertType.INFORMATION, null, keepplaying, newgame);
         winner.setTitle("You Win");
         winner.setHeaderText("What would you like to do?");
+
         DialogPane dialogPane = winner.getDialogPane();
         dialogPane.getStylesheets().add(
                 getClass().getResource("/css/style.css").toExternalForm());
         dialogPane.getStyleClass().add("Dialog");
+
         return winner.showAndWait();
     }
 
-    public void invalidInput(){
+    private void saveScore() {
+        timeElapsed = (System.nanoTime() - Game2048.getStartTime())/ 1000000000;
+        int levelReached = calculateLevelReached();
+        int score = board.getScore();
+        String name = Game2048.getName();
+
+        Player player = new Player();
+        player.setTime(timeElapsed);
+        player.setName(name);
+        player.setLevel(levelReached);
+        player.setScore(score);
+        dbManager.save(player);
+    }
+
+    public void invalidInput() {
         Alert invalidInput = new Alert(Alert.AlertType.INFORMATION, null);
         invalidInput.setHeaderText("Invalid input");
         invalidInput.setHeaderText("Nickname and levels must be filled out,\n levels must be an integert");
@@ -153,6 +182,32 @@ public class GameManager {
         invalidInput.showAndWait();
     }
 
+    public int calculateLevelReached(){
+        var values = board.getTileValues();
+        int max = values[0][0];
+
+        for(int i = 0; i < Board.BOARD_SIZE; i++){
+            for(int j = 0; j < Board.BOARD_SIZE; j++){
+                if (values[i][j] > max) {
+                    max = values[i][j];
+                }
+            }
+        }
+
+        int i = 0;
+        while(max >=  Math.pow(2, i)){
+            i++;
+        }
+
+        //while loop stops when 2^i is bigger than the max lvl reached will be i - 1
+        return i - 1;
+
+    }
+
+
+    public Player getPlayer() {
+        return player;
+    }
 
     public Board getBoard() {
         return board;

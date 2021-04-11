@@ -7,6 +7,6 @@ import java.util.List;
 public interface PlayerDAO {
 
     List<Player> findall();
-    Player save(Player player);
+    void save(Player player);
 
 }
