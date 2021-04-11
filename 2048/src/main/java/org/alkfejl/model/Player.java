@@ -8,6 +8,7 @@ public class Player {
     private DoubleProperty time = new SimpleDoubleProperty(this, "time");
     private IntegerProperty level = new SimpleIntegerProperty(this, "level");
     private IntegerProperty score = new SimpleIntegerProperty(this, "score");
+    private StringProperty gridsize = new SimpleStringProperty(this, "gridsize");
 
     public int getId() {
         return id.get();
@@ -67,5 +68,17 @@ public class Player {
 
     public void setScore(int score) {
         this.score.set(score);
+    }
+
+    public String getGridsize() {
+        return gridsize.get();
+    }
+
+    public StringProperty gridsizeProperty() {
+        return gridsize;
+    }
+
+    public void setGridsize(String gridsize) {
+        this.gridsize.set(gridsize);
     }
 }

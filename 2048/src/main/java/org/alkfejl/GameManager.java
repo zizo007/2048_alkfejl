@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -15,19 +16,24 @@ import javafx.scene.text.Text;
 import org.alkfejl.dao.PlayerDAOImpl;
 import org.alkfejl.model.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.alkfejl.Game2048.*;
 
 public class GameManager {
 
     private Board board;
-    private Button restartButton, playButton;
+    private Button restartButton, playButton, topListButton, listPlayers;
     private Text score;
     private TextField levelInput, nameInput;
     private Player player;
-    private long timeElapsed;
-    private PlayerDAOImpl dbManager = new PlayerDAOImpl();
+    private final PlayerDAOImpl dbManager = new PlayerDAOImpl();
+    private ComboBox<String> gridSizeSelector;
+    private List<Player> result;
 
 
     public BorderPane constructGameScene() {
@@ -60,7 +66,7 @@ public class GameManager {
         BorderPane.setMargin(titleBox, new Insets(20, 0, 0, (int) (SCENE_WIDTH / 12)));
         topElements.setRight(scoreRestartBox);
         BorderPane.setAlignment(scoreRestartBox, Pos.CENTER_RIGHT);
-        BorderPane.setMargin(scoreRestartBox, new Insets(20, ((int) (SCENE_WIDTH / 12)), (((int) (SCENE_HEIGHT / 25))), 0));
+        BorderPane.setMargin(scoreRestartBox, new Insets(20, (int) (SCENE_WIDTH / 12), (int) (SCENE_HEIGHT / 25), 0));
 
         var main = new BorderPane();
         main.setTop(topElements);
@@ -94,7 +100,7 @@ public class GameManager {
 
         ObservableList<String> options =
                 FXCollections.observableArrayList("4x4", "5x5", "6x6", "8x8");
-        ComboBox<String> gridSizeSelector = new ComboBox<>(options);
+        gridSizeSelector = new ComboBox<>(options);
         gridSizeSelector.setValue("4x4");
 
         EventHandler<ActionEvent> event =
@@ -108,21 +114,87 @@ public class GameManager {
         Button pictureConfig = new Button("Pictures");
         pictureConfig.getStyleClass().add("menu-button");
         pictureConfig.setPrefWidth(245);
-        Button topList = new Button("Toplist");
-        topList.getStyleClass().add("menu-button");
-        topList.setPrefWidth(245);
+        topListButton = new Button("Toplist");
+        topListButton.getStyleClass().add("menu-button");
+        topListButton.setPrefWidth(245);
         playButton = new Button("Play");
         playButton.setPrefWidth(245);
         playButton.getStyleClass().add("menu-button");
 
 
-        menuBox.getChildren().addAll(title, nameInput, levelInput, gridSizeSelector, pictureConfig, topList, playButton);
+        menuBox.getChildren().addAll(title, nameInput, levelInput, gridSizeSelector, pictureConfig, topListButton, playButton);
 
         menuScene = new Scene(menuBox, 250, 500);
         menuScene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
 
         return menuScene;
     }
+
+    public Scene constructTopListScene(){
+        var players = dbManager.findall();
+        var title = new Text("2048");
+        title.getStyleClass().add("game-title");
+
+        ObservableList<String> options =
+                FXCollections.observableArrayList("4x4", "5x5", "6x6", "8x8");
+        gridSizeSelector = new ComboBox<>(options);
+        gridSizeSelector.setValue("4x4");
+        listPlayers = new Button("Search");
+        listPlayers.getStyleClass().add("menu-button");
+
+       EventHandler<MouseEvent> event = mouseEvent -> {
+            Predicate<Player> byGridSize = player -> player.getGridsize().equals(gridSizeSelector.getValue());
+            result = players.stream().filter(byGridSize).collect(Collectors.toList());
+        };
+
+        listPlayers.addEventFilter(MouseEvent.MOUSE_CLICKED, event);
+
+
+        var topListBox = new VBox();
+        topListBox.setAlignment(Pos.TOP_CENTER);
+        topListBox.setSpacing(5);
+
+        topListBox.getChildren().addAll(title,gridSizeSelector, listPlayers);
+
+
+
+        var topListMenuScene = new Scene(topListBox, 500,500);
+        topListMenuScene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+        return topListMenuScene;
+    }
+
+    public Scene constructListingScene(){
+        var players = dbManager.findall();
+        var topListBox = new VBox();
+        topListBox.setAlignment(Pos.TOP_CENTER);
+        topListBox.setSpacing(5);
+        var heading = new HBox();
+        var nameHeader = new Text("Name ");
+        var timeHeader = new Text("Time ");
+        var levelHeader = new Text("Level ");
+
+        heading.getChildren().addAll(nameHeader,levelHeader,timeHeader);
+        topListBox.getChildren().add(heading);
+
+        Predicate<Player> byGridSize = player -> player.getGridsize().equals(gridSizeSelector.getValue());
+        result = players.stream().filter(byGridSize).collect(Collectors.toList());
+
+        for (var player: result){
+            var playerBox = new HBox();
+            var name = new Text(player.getName()+ " ");
+            var time = new Text(player.getTime() + " seconds");
+            var level = new Text("level " + player.getLevel() + " ");
+
+            playerBox.getChildren().addAll(name,level,time);
+            topListBox.getChildren().add(playerBox);
+        }
+
+        var topListScene = new Scene(topListBox, 500,500);
+        topListScene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+
+        return topListScene;
+    }
+
 
 
     public void gameOver() {
@@ -132,6 +204,7 @@ public class GameManager {
         Alert gameEnded = new Alert(Alert.AlertType.INFORMATION, null, restart);
         gameEnded.setTitle("Game Over");
         gameEnded.setHeaderText("You Lost");
+
 
         DialogPane dialogPane = gameEnded.getDialogPane();
         dialogPane.getStylesheets().add(
@@ -158,17 +231,26 @@ public class GameManager {
     }
 
     private void saveScore() {
-        timeElapsed = (System.nanoTime() - Game2048.getStartTime())/ 1000000000;
+        long timeElapsed = (System.nanoTime() - Game2048.getStartTime()) / 1000000000;
         int levelReached = calculateLevelReached();
         int score = board.getScore();
         String name = Game2048.getName();
+        String gridSize = Board.BOARD_SIZE + "x" + Board.BOARD_SIZE;
+        System.out.println(gridSize);
 
         Player player = new Player();
         player.setTime(timeElapsed);
         player.setName(name);
         player.setLevel(levelReached);
         player.setScore(score);
+        player.setGridsize(gridSize);
         dbManager.save(player);
+
+
+        var players = dbManager.findall();
+        for (var anyad: players){
+            System.out.println(anyad.getName());
+        }
     }
 
     public void invalidInput() {
@@ -198,16 +280,11 @@ public class GameManager {
         while(max >=  Math.pow(2, i)){
             i++;
         }
-
         //while loop stops when 2^i is bigger than the max lvl reached will be i - 1
         return i - 1;
-
     }
 
 
-    public Player getPlayer() {
-        return player;
-    }
 
     public Board getBoard() {
         return board;
@@ -243,5 +320,21 @@ public class GameManager {
 
     public TextField getNameInput() {
         return nameInput;
+    }
+
+    public Button getTopListButton() {
+        return topListButton;
+    }
+
+    public Button getListPlayers() {
+        return listPlayers;
+    }
+
+    public PlayerDAOImpl getDbManager() {
+        return dbManager;
+    }
+
+    public ComboBox<String> getGridSizeSelector() {
+        return gridSizeSelector;
     }
 }

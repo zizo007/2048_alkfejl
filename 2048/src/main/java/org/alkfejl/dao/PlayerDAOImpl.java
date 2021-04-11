@@ -10,7 +10,7 @@ import java.util.List;
 public class PlayerDAOImpl implements PlayerDAO{
 
     private static final String SELECT_ALL_PLAYER_SCORES = "SELECT * FROM scores";
-    private static final String ADD_PLAYER_SCORE = "INSERT INTO scores (name, time, level, score) VALUES (?,?,?,?)";
+    private static final String ADD_PLAYER_SCORE = "INSERT INTO scores (name, time, level, score, gridsize) VALUES (?,?,?,?,?)";
     private final String connectionURL;
 
     public PlayerDAOImpl() {
@@ -35,6 +35,7 @@ public class PlayerDAOImpl implements PlayerDAO{
                 player.setScore(resultSet.getInt("score"));
                 player.setLevel(resultSet.getInt("level"));
                 player.setTime(resultSet.getDouble("time"));
+                player.setGridsize(resultSet.getString("gridsize"));
 
                 result.add(player);
             }
@@ -54,6 +55,7 @@ public class PlayerDAOImpl implements PlayerDAO{
             statement.setDouble(2,player.getTime());
             statement.setInt(3,player.getLevel());
             statement.setInt(4,player.getScore());
+            statement.setString(5,player.getGridsize());
             statement.executeUpdate();
 
             ResultSet genKeys = statement.getGeneratedKeys();

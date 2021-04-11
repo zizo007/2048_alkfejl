@@ -1,6 +1,8 @@
 package org.alkfejl;
 
 import java.util.Arrays;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -12,6 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.alkfejl.model.Player;
 
 /**
  * JavaFX App
@@ -64,7 +67,26 @@ public class Game2048 extends Application {
             menuScene = gameManager.constructMenuScene();
             mainWindow.setScene(menuScene);
 
-            EventHandler<MouseEvent> eventHandler = mouseEvent -> {
+
+            EventHandler<MouseEvent> topListButtonEventHandler = mouseEvent -> {
+                var topListScene = gameManager.constructTopListScene();
+                mainWindow.setScene(topListScene);
+
+                var players = gameManager.getDbManager().findall();
+
+                EventHandler<MouseEvent> listingEventHandler = click -> {
+
+                    var listScene = gameManager.constructListingScene();
+                    mainWindow.setScene(listScene);
+                };
+                gameManager.getListPlayers().addEventFilter(MouseEvent.MOUSE_CLICKED, listingEventHandler);
+
+
+            };
+
+            gameManager.getTopListButton().addEventFilter(MouseEvent.MOUSE_CLICKED, topListButtonEventHandler);
+
+            EventHandler<MouseEvent> playButtonEventHandler = mouseEvent -> {
                 name = gameManager.getNameInput().getText();
                 if (!name.equals("") && !gameManager.getLevelInput().getText().equals("")) {
                     try {
@@ -83,7 +105,7 @@ public class Game2048 extends Application {
                 }
             };
 
-            gameManager.getPlayButton().addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+            gameManager.getPlayButton().addEventFilter(MouseEvent.MOUSE_CLICKED, playButtonEventHandler);
 
         } else {
             startTime = System.nanoTime();
