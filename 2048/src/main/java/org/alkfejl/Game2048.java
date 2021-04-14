@@ -1,8 +1,6 @@
 package org.alkfejl;
 
 import java.util.Arrays;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -12,9 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.alkfejl.model.Player;
 
 /**
  * JavaFX App
@@ -72,7 +68,7 @@ public class Game2048 extends Application {
                 var topListScene = gameManager.constructTopListScene();
                 mainWindow.setScene(topListScene);
 
-                var players = gameManager.getDbManager().findall();
+                var players = gameManager.getDbManager().findAll();
 
                 EventHandler<MouseEvent> listingEventHandler = click -> {
 

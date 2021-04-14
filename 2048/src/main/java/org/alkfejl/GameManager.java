@@ -16,7 +16,6 @@ import javafx.scene.text.Text;
 import org.alkfejl.dao.PlayerDAOImpl;
 import org.alkfejl.model.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -131,7 +130,7 @@ public class GameManager {
     }
 
     public Scene constructTopListScene(){
-        var players = dbManager.findall();
+        var players = dbManager.findAll();
         var title = new Text("2048");
         title.getStyleClass().add("game-title");
 
@@ -164,7 +163,7 @@ public class GameManager {
     }
 
     public Scene constructListingScene(){
-        var players = dbManager.findall();
+        var players = dbManager.findAll();
         var topListBox = new VBox();
         topListBox.setAlignment(Pos.TOP_CENTER);
         topListBox.setSpacing(5);
@@ -194,7 +193,6 @@ public class GameManager {
 
         return topListScene;
     }
-
 
 
     public void gameOver() {
@@ -247,7 +245,7 @@ public class GameManager {
         dbManager.save(player);
 
 
-        var players = dbManager.findall();
+        var players = dbManager.findAll();
         for (var anyad: players){
             System.out.println(anyad.getName());
         }

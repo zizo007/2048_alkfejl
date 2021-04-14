@@ -1,0 +1,21 @@
+.background {
+    background-color: #FAF8F0;
+}
+
+.middle-div{
+    position: absolute;
+    border: 1px solid #ccc;
+    top:22%;
+    left:40%;
+    width: 400px;
+    height: 500px;
+
+}
+
+
+.game-title {
+    position: relative;
+    top: -200px;
+    color: #776e65;
+    font-size: 80px;
+}

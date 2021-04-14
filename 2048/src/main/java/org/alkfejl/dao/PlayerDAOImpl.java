@@ -18,7 +18,7 @@ public class PlayerDAOImpl implements PlayerDAO{
     }
 
     @Override
-    public List<Player> findall() {
+    public List<Player> findAll() {
 
         List<Player> result = new ArrayList<>();
 
