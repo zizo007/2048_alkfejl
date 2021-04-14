@@ -4,18 +4,41 @@
 
 .middle-div{
     position: absolute;
-    border: 1px solid #ccc;
-    top:22%;
-    left:40%;
+    top:5%;
+    left:35%;
+    width: 600px;
+    height: 800px;
+
+}
+
+.wide-button{
+    width: 100%;
+    position: relative;
+    margin-top: 15px;
+}
+
+.menu-div {
+    position: relative;
+    top:5%;
+    left: 16.6%;
     width: 400px;
-    height: 500px;
+    height:500px;
 
 }
 
 
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+
+
+
 .game-title {
     position: relative;
-    top: -200px;
-    color: #776e65;
+    left:200px;
+    color: orangered;
     font-size: 80px;
 }
